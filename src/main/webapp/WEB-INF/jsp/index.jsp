@@ -1,28 +1,125 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%
-String path = request.getContextPath();
-String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+	String path = request.getContextPath();
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+			+ path + "/";
 %>
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+	
+<!DOCTYPE html>
 <html>
-  <head>
-    <base href="<%=basePath%>">
-    
-    <title>欢迎页面</title>
-	<meta http-equiv="pragma" content="no-cache">
-	<meta http-equiv="cache-control" content="no-cache">
-	<meta http-equiv="expires" content="0">    
-	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
-	<meta http-equiv="description" content="This is my page">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<!--
-	<link rel="stylesheet" type="text/css" href="styles.css">
-	-->
-  </head>
-  
-  <body>
+<head>
+<meta charset="utf-8" />
+<title>Sniper</title>
 
-     查看用户信息：<a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx2282aa916d5feb59&redirect_uri=http%3A%2F%2F6bbae000.ngrok.io%2Fssmtest%2Fuser%2Fshow%3Fid%3D1&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect">登录</a>
-  </body>
+<script src="resource/js/jquery-3.2.1.min.js"></script>
+<script src="resource/js/bootstrap.min.js"></script>
+<link href="resource/css/bootstrap.min.css" rel="stylesheet" />
+<script src="resource/js/bootstrap-paginator.js"></script>
+<link href="resource/css/css.css" rel="stylesheet" />
+<style>
+.content {
+	padding: 3px;
+	border: solid 1px;
+	margin: 2px;
+}
+</style>
+
+<script>
+	$(function() {
+		$('#pageLimit').bootstrapPaginator({
+			currentPage : 1,
+			totalPages : 10,
+			size : "normal",
+			bootstrapMajorVersion : 3,
+			alignment : "right",
+			numberOfPages : 5,
+			itemTexts : function(type, page, current) {
+				switch (type) {
+				case "first":
+					return "首页";
+				case "prev":
+					return "上一页";
+				case "next":
+					return "下一页";
+				case "last":
+					return "末页";
+				case "page":
+					return page;
+				}
+			}
+		});
+		getList(1);
+	});
+</script>
+</head>
+
+<body class="container">
+	<ul class="nav nav-tabs">
+		<li role="presentation" class="active"><a href="index.html">首页</a>
+		</li>
+		<li><a href="index.html">电影</a></li>
+		<li><a href="index.html">电视剧</a></li>
+		<li><a href="index.html">综艺</a></li>
+	</ul>
+
+	<div class="col-md-12">
+		<div class="col-md-12">
+			<div id="list" class="row">
+				<div class="content">
+					<a href="index.html">电影标题</a>
+				</div>
+				<div class="content">
+					<a href="index.html">电影标题</a>
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+	<div align="center">
+		<nav aria-label="Page navigation">
+			<ul id="pageLimit" class="pagination">
+				<li><a href="#" aria-label="Previous"> <span
+						aria-hidden="true">&laquo;</span>
+				</a></li>
+				<li><a href="#">1</a></li>
+				<li><a href="#">2</a></li>
+				<li><a href="#">3</a></li>
+				<li><a href="#">4</a></li>
+				<li><a href="#">5</a></li>
+				<li><a href="#" aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+				</a></li>
+			</ul>
+		</nav>
+	</div>
+
+	<script>
+		function getList(page) {
+			$.ajax({
+				type : "get",
+				url : "ajax/index/list?page=" + page,
+				async : true,
+				dataType : "json",
+				success : function(data) {
+					var length = data.length;
+	
+					for (var i = 0; i < length; i++) {
+						$("#list").append("<div class='content'><a href='javascript:void(0)' onclick=getDetail('" + data[i].url + "')> " + data[i].title + "</a></div>");
+					}
+				},
+				error : function(xml) {
+					alert('An error happend while loading XML document ');
+				}
+			});
+	
+		}
+	
+		function getDetail(url) {
+			window.location.href = '<%=basePath%>' + "detail?url=" + url;
+	
+		}
+	</script>
+
+</body>
+
 </html>
