@@ -117,5 +117,9 @@
   	
   
   </select>
+    <select id="getUrlListTotalPage" resultType="int" >
+   		select count(*) from url_list ;
+  	
   
+  </select>
 </mapper>

@@ -25,11 +25,19 @@ public class IndexAction {
 	
 	@RequestMapping(value = "/list",method = RequestMethod.GET, produces = {"text/javascript;charset=UTF-8"})
 	public String getList(HttpServletRequest request, HttpServletResponse response, @RequestParam("page") int page){
+		int totalNum = urlListService.getUrlListTotalPage();
+		int totalPage = 0;
+		if(totalNum%20!=0){
+			totalPage = ((int)totalNum/20)+1;
+		}else{
+			totalPage = ((int)totalNum/20);
+		}
 		
-		JSONObject jsonObject = new JSONObject();
-		jsonObject.put("list", "aaa");
 		List<UrlList> tmp = urlListService.getUrlList(page);
-		return JSONObject.toJSONString(tmp);
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("totalPage", totalPage);
+		jsonObject.put("data", tmp);
+		return jsonObject.toJSONString();
 	}
 	
 	@RequestMapping(value = "/detail",method = RequestMethod.GET, produces = {"text/javascript;charset=UTF-8"})

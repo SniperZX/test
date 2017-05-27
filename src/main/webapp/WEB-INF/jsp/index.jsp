@@ -4,7 +4,7 @@
 	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
 %>
-	
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -101,11 +101,14 @@
 				async : true,
 				dataType : "json",
 				success : function(data) {
-					var length = data.length;
-	
+					var length = data.data.length;
+					$("#list").html("");
 					for (var i = 0; i < length; i++) {
-						$("#list").append("<div class='content'><a href='javascript:void(0)' onclick=getDetail('" + data[i].url + "')> " + data[i].title + "</a></div>");
+						
+						$("#list").append("<div class='content'><a href='javascript:void(0)' onclick=getDetail('" + data.data[i].url + "')> " + data.data[i].title + "</a></div>");
 					}
+					display(page, data.totalPage);
+	
 				},
 				error : function(xml) {
 					alert('An error happend while loading XML document ');
@@ -117,6 +120,60 @@
 		function getDetail(url) {
 			window.location.href = '<%=basePath%>' + "detail?url=" + url;
 	
+		}
+		//显示新闻评论  
+		function display(curtpage, tpage) {
+			var options = {
+				bootstrapMajorVersion : 3, //版本  
+				currentPage : curtpage, //当前页数  
+				numberOfPages : 5, //设置显示的页码数  
+				totalPages : tpage, //总页数  
+				itemTexts : function(type, page, current) {
+					switch (type) {
+					case "first":
+						return "首页";
+					case "prev":
+						return "上一页";
+					case "next":
+						return "下一页";
+					case "last":
+						return "末页";
+					case "page":
+						return page;
+					}
+				},
+				onPageClicked : function(event, originalEvent, type, page) {
+	
+					//show the corresponding page and retrieve the newly built item related to the page clicked before for the event return
+	
+					var currentTarget = $(event.currentTarget);
+	
+					switch (type) {
+					case "first":
+						currentTarget.bootstrapPaginator("showFirst");
+						getList(page);
+						break;
+					case "prev":
+						currentTarget.bootstrapPaginator("showPrevious");
+						getList(page);
+						break;
+					case "next":
+						currentTarget.bootstrapPaginator("showNext");
+						getList(page);
+						break;
+					case "last":
+						currentTarget.bootstrapPaginator("showLast");
+						getList(page);
+						break;
+					case "page":
+						currentTarget.bootstrapPaginator("show", page);
+						getList(page);
+						break;
+					}
+	
+				}
+			}
+			$("#pageLimit").bootstrapPaginator(options);
 		}
 	</script>
 

@@ -58,4 +58,6 @@ public interface UrlListMapper {
 
 	List<UrlList> selectListByPage(@Param("page")int page);
 
+	int getUrlListTotalPage();
+
 }

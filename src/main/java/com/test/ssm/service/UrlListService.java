@@ -28,6 +28,10 @@ public class UrlListService {
 		List<DetailWithBLOBs> tmpList = detailMapper.getDetailFromUrl(url);
 		return tmpList;
 	}
+
+	public int getUrlListTotalPage() {
+		return urlListMapper.getUrlListTotalPage();
+	}
 	
 	
 }
